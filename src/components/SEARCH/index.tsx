@@ -1,0 +1,26 @@
+import React, { useContext } from 'react';
+import styles from './search.module.scss';
+import { SearchContext } from '../../App';
+
+export const Search = () => {
+  const { searchPizza, setSearchPizza } = useContext(SearchContext);
+  return (
+    <>
+      <div className={styles.main}>
+        <img
+          className={styles.img}
+          src="data:image/png;base64,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"
+          alt=""
+        />
+        <input
+          onChange={(e) => setSearchPizza(e.target.value)}
+          value={searchPizza}
+          placeholder="Поик пиццы..."
+          className={styles.input}
+        />
+      </div>
+    </>
+  );
+};
+
+export default Search;
