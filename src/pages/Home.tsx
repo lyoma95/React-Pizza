@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Sort from '../components/Sort';
 import Categories from '../components/Categories';
@@ -9,22 +10,26 @@ import { useEffect } from 'react';
 import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
 import { useContext } from 'react';
+import { setCategoryId } from '../redux/slises/filterSlice';
 
 const Home = () => {
+  const categoryId = useSelector((state) => state.filter.categoryId);
+  const sortType = useSelector((state) => state.filter.sort.sortProperty);
+  const dispatch = useDispatch();
+
+  const onChangeCategory = (id) => {
+    dispatch(setCategoryId(id));
+  };
+
   const [item, setItem] = useState([]);
   const [isActive, setIsAktive] = useState(true);
-  const [categoryId, setCategoryId] = useState(0);
   const [page, setPage] = useState(1);
-  const [sortType, setSortType] = useState({
-    name: 'популярности',
-    sortProperty: 'rating',
-  });
   const { searchPizza } = useContext(SearchContext);
 
   useEffect(() => {
     setIsAktive(true);
-    const sortBy = sortType.sortProperty.replace('-', '');
-    const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
+    const sortBy = sortType.replace('-', '');
+    const order = sortType.includes('-') ? 'asc' : 'desc';
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchPizza ? `&search=${searchPizza}` : '';
     fetch(
@@ -53,8 +58,8 @@ const Home = () => {
     <>
       <div>
         <div className="content__top">
-          <Categories value={categoryId} onChangeCategory={(id) => setCategoryId(id)} />
-          <Sort value={sortType} onChangeSort={(id) => setSortType(id)} />
+          <Categories value={categoryId} onChangeCategory={onChangeCategory} />
+          <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">{isActive ? sceletons : allPizzas}</div>
